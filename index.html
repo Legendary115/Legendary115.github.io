@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Bypasser</title>
+    <title>Combined Bypassers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         body {
             margin: 0;
@@ -13,8 +14,9 @@
             background: linear-gradient(to right, #141e30, #243b55);
             color: #fff;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
         }
         .container {
@@ -23,9 +25,10 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            width: 400px;
+            width: 80%;
+            max-width: 600px;
         }
-        input[type="text"] {
+        input[type="text"], input[type="url"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -78,12 +81,33 @@
 </head>
 <body>
     <div class="container">
-        <h2>Link Bypasser</h2>
-        <input type="text" id="linkInput" placeholder="Enter link here">
-        <button onclick="bypassLink()">Bypass Link</button>
-        <div id="result" class="result"></div>
+        <h1 class="animate__animated animate__fadeInDown">Combined Bypassers</h1>
+        
+        <!-- Website Bypasser Section -->
+        <div class="container">
+            <h2>Link Bypasser</h2>
+            <input type="text" id="linkInput" placeholder="Enter link here">
+            <button onclick="bypassLink()">Bypass Link</button>
+            <div id="result" class="result"></div>
+        </div>
+
+        <!-- Fluxus Bypasser Section -->
+        <div class="container">
+            <h2>Fluxus Bypasser</h2>
+            <form id="bypassForm">
+                <div class="form-group">
+                    <input type="url" id="urlInput" class="form-control" placeholder="Enter Fluxus Link" required>
+                </div>
+                <button type="submit" class="btn btn-primary animate__animated animate__pulse animate__infinite">Bypass</button>
+            </form>
+            <div class="result alert alert-success" role="alert">
+                <strong>Key:</strong> <span id="keyOutput"></span>
+            </div>
+        </div>
     </div>
+
     <script>
+        // Function for Link Bypasser
         function bypassLink() {
             var link = document.getElementById('linkInput').value;
             var resultDiv = document.getElementById('result');
@@ -112,6 +136,30 @@
                 alert('failed to copy');
             });
         }
+
+        // Function for Fluxus Bypasser
+        document.getElementById('bypassForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const url = document.getElementById('urlInput').value;
+            const apiUrl = `https://bypass-beta.vercel.app/api/bypass?url=${encodeURIComponent(url)}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.key) {
+                        document.getElementById('keyOutput').innerText = data.key;
+                        document.querySelector('.result').style.display = 'block';
+                        document.querySelector('.result').classList.add('animate__animated', 'animate__fadeIn');
+                    } else {
+                        alert('Failed to bypass.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred');
+                });
+        });
     </script>
 </body>
 </html>
+
